@@ -250,11 +250,16 @@ def chat():
                 data = sock.recv(4096)
                 if not data:
                     print('Connection lost...'); return user_input()
+
+                # Kick user [WARNING] NO ADMIN TOKEN REQUIRED
+                elif '/kick ' + username in data:
+                    print('\nConnection lost.................[\033[1;91mKicked\033[0m]'); return user_input()
                 else:
                     sys.stdout.write('\033[92m' + data + '\033[0m')
                     sys.stdout.write('[' + username + '] '); sys.stdout.flush()
             else:
                 msg = '[' + username + '] ' + sys.stdin.readline()
+                #s.send('[' + grab_time() + '] ' + msg)
                 s.send(msg)
                 sys.stdout.write('[' + username + '] '); sys.stdout.flush()
 
@@ -382,7 +387,7 @@ def boot():
                                 if sock in client_list:
                                     client_list.remove(sockfd)
                             else:
-                                broadcast(server, sockfd, '[%s] Connected\n' % user[1])
+                                broadcast(server, sockfd, '\n[%s] Connected\n' % user[1])
                                 with open('online.txt', 'a') as f:
                                     f.write('\n' + user[1])
                                     f.close()

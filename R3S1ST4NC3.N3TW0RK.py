@@ -214,8 +214,8 @@ def chat():
             split = split.split(':')
             ip = split[0]; port = int(split[1])
     else:
-        ip = raw_input('IP: ')
-        port = input('Port: ')
+        ip = raw_input('IP \> ')
+        port = input('Port \> ')
     username = raw_input('Username: ')
     if username == '':
         print('Username is required\n'); return chat()
@@ -257,6 +257,8 @@ def chat():
                 else:
                     sys.stdout.write('\033[92m' + data + '\033[0m')
                     sys.stdout.write('[' + username + '] '); sys.stdout.flush()
+            elif '/return':
+                return user_input()
             else:
                 msg = '[' + username + '] ' + sys.stdin.readline()
                 #s.send('[' + grab_time() + '] ' + msg)
@@ -391,12 +393,23 @@ def boot():
                                 with open('online.txt', 'a') as f:
                                     f.write('\n' + user[1])
                                     f.close()
-                        elif 'PASSWD$' in data:
-                            passwd = data.split('$')
-                            passwd2 = open('password.txt').read()
+
+                        elif '/password' in data:
+                            passwd = data.split(' ') # 0 = user, 1 = /password, 2 = password
+                            passwd2 = open('password.txt', 'r').readlines()
 
                             if passwd[2] == passwd2:
-                                broadcast(server, sock, '[SERVER] Root admin came online\n')
+                                print('[ROOT LOGIN] Success for user %s' % passwd[0])
+                                broadcast(server, sock, '[SERVER] Root admin' + passwd[0] + 'came online\n')
+                            else:
+                                print('[ROOT LOGIN] Invalid password attempt logged from user %s' % passwd[0])
+
+                        elif '/users' in data:
+                            user_list = []
+                            for l in open('./online.txt', 'r').readlines():
+                                user_list.append(l)
+                            print(user_list)
+                            broadcast(server, sock, '\r' + user_list)
 
                         else:
                             broadcast(server, sock, '\r' + data)

@@ -257,8 +257,8 @@ def chat():
                 else:
                     sys.stdout.write('\033[92m' + data + '\033[0m')
                     sys.stdout.write('[' + username + '] '); sys.stdout.flush()
-            elif '/return':
-                return user_input()
+            #elif '/return':
+            #    return user_input()
             else:
                 msg = '[' + username + '] ' + sys.stdin.readline()
                 #s.send('[' + grab_time() + '] ' + msg)
